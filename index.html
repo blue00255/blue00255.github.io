@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>校园可视化</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.23//esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.23//"></script>
+    <link rel="stylesheet" type="text/css" href="cug.css">   <!--引入自定义样式文件-->
+    <script src="cug.js"></script>                           <!--引入逻辑js文件-->
+  </head>
+
+ 
+  <body>
+    <div class="cug" id="select">   <!--左上角的查询设置-->
+      <!--输入要查询的学校建筑名称-->
+      <input id="valSelect" placeholder="CUG" value="" />
+      <button class="cug" id="butt">点击查询</button> <br />
+      <p><span id="result"></span></p>    <!--查询的结果数量将在这里显示-->
+    </div>
+    <div id="cug_3DviewDiv"></div>   <!--用来存放主视图——3D视图-->
+    <div id="cug_2DviewDiv"> </div>    <!--用来存放右上角的2D视图视图-->
+  </body>
+</html>
