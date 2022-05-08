@@ -1,0 +1,40 @@
+
+      html,
+      body,
+      #cug_3DviewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        z-index: -1;    
+      }
+      /*z-index 属性设置元素的堆叠顺序。拥有更高堆叠顺序的元素总是会处于堆叠顺序较低的元素的前面
+      所以3D视图在2D视图的后面
+      
+      */
+
+      #cug_2DviewDiv{
+        position: absolute;
+        top: 50px;
+        right: 12px;
+        width: 300px;
+        height: 200px;
+        border: 1px solid black;
+        z-index: 1;
+        overflow: hidden; 
+      }
+      #select {
+        background-color: rgb(4, 102, 42);
+        color: white;
+        padding: 10px;
+        width: 350px;
+      }
+      .esri-popup .esri-popup-header .esri-title {
+        font-size: 18px;
+        font-weight: bolder;
+      }
+      .esri-popup .esri-popup-body .esri-popup-content {
+        font-size: 14px;
+      }
+
+
