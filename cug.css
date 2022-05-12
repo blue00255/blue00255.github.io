@@ -15,20 +15,58 @@
 
       #cug_2DviewDiv{
         position: absolute;
-        top: 50px;
-        right: 12px;
+        top: 62px;
+        right: 1px;
         width: 300px;
         height: 200px;
         border: 1px solid black;
         z-index: 1;
         overflow: hidden; 
       }
+      #basegally 
+      {
+         position: absolute;
+         bottom: 50px;
+         left: 12px;
+         width: 200px;
+         height: 200px;
+         border: 1px solid black;
+         z-index: 1;
+         overflow: hidden; 
+         overflow-y:auto;
+       }
+       #buttonsDiv {
+        position: absolute;
+        top: 0px;
+        right: 1px;
+        padding: 12px;
+        background-color: rgba(200, 200, 200, 0.5);
+        border: 1px solid black;
+    }
+    #Wander {
+      position: absolute;
+      top: 0px;
+      right: 600px;
+      padding: 12px;
+      background-color: rgba(200, 200, 200, 0.5);
+      border: 1px solid black;
+  }
+
+    #indicatorSpan {
+        display: inline-block;
+        vertical-align: middle;
+        width: 30px;
+        height: 30px;
+        background-color: rgba(100, 100, 100, 0.8);
+        border: 2px solid #ccc;
+    }
       #select {
         background-color: rgb(4, 102, 42);
         color: white;
         padding: 10px;
         width: 350px;
       }
+    
       .esri-popup .esri-popup-header .esri-title {
         font-size: 18px;
         font-weight: bolder;
