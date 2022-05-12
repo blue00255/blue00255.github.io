@@ -10,6 +10,7 @@
     <script src="https://js.arcgis.com/4.23//"></script>
     <link rel="stylesheet" type="text/css" href="cug.css">   <!--引入自定义样式文件-->
     <script src="cug.js"></script>                           <!--引入逻辑js文件-->
+    <script src="wander.html"></script>
   </head>
 
  
@@ -20,7 +21,16 @@
       <button class="cug" id="butt">点击查询</button> <br />
       <p><span id="result"></span></p>    <!--查询的结果数量将在这里显示-->
     </div>
+    <div id="Wander">
+      <a href="wander.html">视觉漫游</a>
+    </div> 
     <div id="cug_3DviewDiv"></div>   <!--用来存放主视图——3D视图-->
     <div id="cug_2DviewDiv"> </div>    <!--用来存放右上角的2D视图视图-->
+    <div id="basegally"></div>
+    <div id="buttonsDiv">
+      <button id="rotateAntiClockwiseSpan" title="Rotate 90°">↻</button>     <!--逆时针旋转-->
+      <button id="indicatorSpan"></button>                                    <!--向内外旋转-->
+      <button id="rotateClockwiseSpan" title="Rotate 90°">↺</button>         <!--顺时针旋转-->
+  </div>
   </body>
 </html>
