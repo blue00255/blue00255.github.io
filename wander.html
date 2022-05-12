@@ -1,0 +1,260 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>校园漫游</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        #optionsDiv {
+            position: absolute;
+            bottom: 17px;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 1;
+            text-align: center;
+        }
+
+        button {
+            background: white;
+            padding: 7px;
+            border: 1px solid #005e95;
+            font-size: 0.9em;
+            margin: 5px;
+            color: #005e95;
+        }
+
+        button:hover {
+            background: #005e95;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        require([
+            "esri/config",
+            "esri/Map",
+            "esri/views/SceneView",
+            "esri/views/MapView",
+            "esri/Graphic",
+            "esri/core/watchUtils",
+            "esri/renderers/SimpleRenderer",
+            "esri/symbols/PolygonSymbol3D",
+            //3D多边形符号用于在3D场景视图中渲染具有多边形几何的要素
+            "esri/symbols/ExtrudeSymbol3DLayer",
+            //拉伸Symbol3DLayer用于渲染多边形几何体，方法是从地面向上拉伸多边形几何体，从而创建3D体积对象。这是通过 SceneView 中的 PolygonSymbol3D 完成的
+            "esri/layers/FeatureLayer",
+            "esri/widgets/Legend"
+        ], function (esriConfig, Map, SceneView, MapView, Graphic, watchUtils, SimpleRenderer, PolygonSymbol3D, ExtrudeSymbol3DLayer, FeatureLayer, Legend) {
+
+            esriConfig.apiKey = "AAPKf2f682bb06cd4d6db04ec7adc972abd38bcgsUzXDf0Ja0oARVexpNbd3pbtHhBRkgtki3elRuKgs0jX7s6GqnAeuJ9lbtym";
+            function getSymbol(color)    //由于不同的label不同的渲染效果，定义一个函数，每个都调用这个函数，正常情况是上面的函数，这里只有color这一个变量
+            {
+                return {
+                    type: "polygon-3d",
+                    symbolLayers: [
+                        {
+                            type: "extrude",   ////必须将ExtrudeSymbol3DLayer添加到多边形Symbol3D 的属性中
+                            material: {
+                                color: color
+                            },
+                            edges: {
+                                type: "solid",
+                                color: "#999",
+                                size: 0.5
+                            }
+                        }
+                    ]
+                };
+            }
+            //渲染器
+            const renderer = {
+                type: "unique-value",
+                defaultSymbol: getSymbol("#FFFFFF"),
+                defaultLabel: "Other",   //除了下面四个类型的以外，其他的都默认为other
+                field: "TYPE",           //渲染器用于匹配唯一值或类型的属性字段的名称。
+                uniqueValueInfos: [
+                    {
+                        value: "culandsport",   //文体建筑  具有该值的要素将使用给定的符号进行渲染。
+                        symbol: getSymbol("#149ECE"),   //调用上面的函数，用这个颜色进行渲染
+                        label: "culandsport"
+                    },
+                    {
+                        value: "university",   //教学楼等设施
+                        symbol: getSymbol("#FC921F"),
+                        label: "university"
+                    },
+                    {
+                        value: "dormitory",   //宿舍
+                        symbol: getSymbol("#ED5151"),
+                        label: "dormitory"
+                    },
+                ],
+                visualVariables: [  //根据上面匹配的type类型，这个属性允许使用者根据height属性拉伸高度
+                    {
+                        type: "size",
+                        field: "HEIGHT"
+                    }
+                ]
+            };
+
+            const buildingsLayer = new FeatureLayer({
+                url:
+                    "https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/0508cug_WFL1/FeatureServer/0",
+                renderer: renderer,
+                elevationInfo: {
+                    mode: "on-the-ground"
+                },
+                title: "Extruded building footprints",
+                popupTemplate: {   //弹出的提示框模板
+
+                    title: "{TYPE}",  //标题是模型的type
+                    content: [
+                        {
+                            type: "fields",
+                            fieldInfos: [   //建筑的类型
+                                {
+                                    fieldName: "TYPE",
+                                    label: "Type"
+                                },
+                                {
+                                    fieldName: "HEIGHT",   //建筑的高度
+                                    label: "Height"
+                                },
+                                {
+                                    fieldName: "name",   //建筑的名字
+                                    label: "name"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                outFields: ["TYPE", "HEIGHT", "name"]
+            });
+            // 创建一个地图作为主视图，这个地图中添加我们建模好的图层
+
+
+            const map = new Map({
+                basemap: "hybrid",      //basemap属性可使用预置的底图
+                ground: "world-elevation",        //ground属性表示地图高程，可以用预置的世界高程数据，也可以自定义高程图层       
+                layers: [buildingsLayer]  //layers属性是可操作的Layer对象的集合，Layer类有很多子类，如几何图层、地图图层、要素图层等
+            });
+
+            const viewcug = new SceneView({
+                container: "viewDiv",
+                map: map,
+                camera: {           //camera就是加载三维图的视角
+                    position: {
+                        latitude: 30.4500270,
+                        longitude: 114.6136256,     //初始视角定位到学校
+                        z: 800,
+                    },
+                    heading: 0,
+                    tilt: 55
+                },
+                zoom: 4
+            });
+
+            function catchAbortError(error) {
+                if (error.name != "AbortError") {
+                    console.error(error);
+                }
+            }
+
+
+
+            //经度114.6167158°，纬度30.4659268°   左上
+            //经度114.6162846°，纬度30.4610552°   左下
+            //经度114.6295616°，纬度30.4604949°   右下
+            //经度114.6286812°，纬度30.4664871°   右上
+
+
+            //经度114.6095653°，纬度30.4600902°
+            function flyLine() {
+                let flyMoveUnit = 0.00005;
+                let flyMoveUnit1 = 0.00002;
+                let flyLatitude = 30.4600902;
+                let flyLongitude = 114.6095653;
+                let flyInterval = null;
+                var m=0;
+                var n=0;
+                var i=0;
+                var j=0;
+
+                viewcug.goTo({ zoom: 17, tilt: 75, center: [flyLongitude, flyLatitude]})
+                    .then(function () {
+                        flyInterval = window.setInterval(function () {   //
+                            if(m<100)
+                            {
+                            m++;
+                            flyLatitude =flyLatitude;
+                            flyLongitude = flyLongitude + flyMoveUnit;
+                            }else if(n<150)
+                            {
+                                n++;
+                                flyLongitude = flyLongitude;  
+                                flyLatitude = flyLatitude + flyMoveUnit1;
+
+                            }else if (i<100)
+                            {
+                             i++;
+                            flyLatitude =flyLatitude;
+                            flyLongitude = flyLongitude - flyMoveUnit;
+                            }else if(j<150)
+                            {
+                                j++;
+                                flyLongitude = flyLongitude;  
+                                flyLatitude = flyLatitude - flyMoveUnit1;
+                            }
+                            if(j==150)
+                            {
+                                m=0;
+                                n=0;
+                                i=0;
+                                j=0;
+                            }
+                            viewcug.goTo(
+                                {
+                                    zoom: 17.5,
+                                    tilt: 50,
+                                    center: [flyLongitude, flyLatitude]
+                                },
+                                {
+                                    easing: "linear", //动画效果  linear为线性速度
+                                    speedFactor: 1  //速度因素，相机移动的速度参数，默认为1
+                                }
+                            );
+                        }, 80);          
+                    })
+                    .catch(catchAbortError);
+            }
+            const wander=document.getElementById("default")
+            wander.addEventListener("click", () => {    //添加事件，点击这个按钮时，调用这个函数
+                flyLine();
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <div id="optionsDiv">
+        <button id="default">开始漫游</button>
+    </div>
+    <div id="viewDiv"></div>
+</body>
+
+</html>
