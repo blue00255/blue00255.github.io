@@ -44,12 +44,12 @@ require([
 ) {
   // esriConfig.apiKey = "AAPK2c7001cf63cf4c32bde7e7db7b8e780cO5DpjPOSMxZdJoI4rQ-bXRVoQkZYrShAtQnTEfzo_r8a8ON9UYt-jZ3Pk3PF6k38";
   esriConfig.apiKey =
-    "AAPKf2f682bb06cd4d6db04ec7adc972abd38bcgsUzXDf0Ja0oARVexpNbd3pbtHhBRkgtki3elRuKgs0jX7s6GqnAeuJ9lbtym";
+    "AAPK887f8dad38d2492fb0ad4c64459c3b1bIV5JfnwhDAUn9LjD3q9nBlGNpZzH425ZtyqvAjZTaQ_-TemXuQH5tXsrKdTtQgq0";
   //这是要查询的图层，也就是我们建模之后，上传的图层
   //var china ="https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/cug0425_WFL1/FeatureServer/0";
 
   var china =
-    "https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/0508cug_WFL1/FeatureServer/0";
+    "https://services3.arcgis.com/U26uBjSD32d7xvm2/arcgis/rest/services/cug0525_WFL1/FeatureServer/0";
   //创建用于显示查询结果的图形层和符号
   var resultsLayer = new GraphicsLayer(); //图形层包含一个或多个客户端图形。图形图层中的每个图形都呈现在 SceneView 或 MapView 内的 LayerView 中
   //特征服务的地址
